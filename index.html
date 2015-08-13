@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Welcome to Feedlot Pro</title>
+		<link rel="stylesheet" type="text/css" href="home/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body id="body-color">
+		<div id="Sign-In">
+			<img src="logo.png" alt="Mountain View" style="width:90%;height:100%;margin-left:40px">
+				<form method="POST" action="connectivity.php" >
+					<br><input type="text" name="user" size="40" placeholder="User Name" required id="user_input"><br>
+					<br><input type="password" name="pass" size="40" placeholder="Password" required id="user_input"><br>
+					<input id="button" class="btn btn-primary login" type="submit" name="submit" value="Login">
+					<button type="button" class="btn btn-primary login" data-toggle="modal" data-target="#mySignUpModal">New User</button>
+				</form>
+
+				<div class="modal fade" id="mySignUpModal" tabindex="-1" aria-labelledby="mySignUpModalLabel" aria-hidden="true">
+					<div class="modal-dialog signup">
+						<div class="modal-content">
+						<div class="modal-body">
+							<h4 id="heading" style="font-size:50px;color:#fff; margin-left:50px">Registration Form</h4>
+							<form id="signUpForm"  method="POST" action="signup/signup.php" >
+								<div class="form-group" >
+									<label class="sr-only" for="firstName">First Name</label>
+									<input type="text" onblur="checkFirstName(this)" class="form-control " name="firstName" placeholder="First Name" maxlength='16' required>
+									<span id='info_firstName' ></span>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="lastName">Last Name</label>
+									<input type="test"  onblur="checkLastName(this)" class="form-control" name="lastName" placeholder="Last Name" maxlength='16' required>
+									<span id='info_lastName' ></span>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="email">Email</label>
+									<input type="email" class="form-control" name="email" id="email" placeholder="Email" oninput="checkEmail(this)" maxlength='32'required="required" >
+									<span id='info_email' ></span>
+									<div id='info_email2' style="width:500px;text-align:center; color:red"></div>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="password">Password</label>
+									<input type="password" class="form-control" name="password" name="password" placeholder="Password"  maxlength='32' required onblur"checkPassword2(this)">
+									<span id='info_pass2'></span>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="confirmPassword">Confirm Password</label>
+									<input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" onblur="checkPassword(password, this)" maxlength='32' required>
+									<span id='info_pass'></span>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="zipCode">Zip Code</label>
+									<input pattern="\d{5,5}(-\d{4,4})?" class="form-control" name="zipCode"  placeholder="Zip Code" maxlength='10' required onblur="checkZipCode(this)">
+									<span id='info_zipCode'></span>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="phoneNumber">Phone Number</label>
+									<input class="form-control" name="phoneNumber" maxlength='16' placeholder="888-888-8888" title="XXX-XXX-XXXX" required pattern="[0-9]{3}[-.]?[0-9]{3}[-.]?[0-9]{4}" onblur="checkPhoneNum(this)">
+									<span id='info_phoneNum'></span>
+								</div >
+								<div class="form-group">
+									<label class="sr-only" for="hearAbout">How did you hear about Feedlot Pro</label>
+									<input type="text" class="form-control" name="hearAbout"  placeholder="How did you hear about Feedlot Pro" maxlength= '64' required onblur="checkHearAbout(this)">
+									<span id='info_hearAbout'></span>
+								</div>
+							</form>
+						<div class="modal-footer" style="text-align:center">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+							<input id="button" form="signUpForm" class="btn btn-primary login" type="submit" name="signup" value="Sign Up" style="margin-top:0px">
+						</div>
+					</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+
+		<script src="home/js/jquery.min.js"></script>
+		<script src="home/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+
+			$(function () {
+			  $('[data-toggle="tooltip"]').tooltip()
+			})
+
+			function checkFirstName(name){
+				if(name.value ==''){
+					$('#info_firstName').html('');
+				}
+				else{
+					$('#info_firstName').html("<span class='available'>&nbsp;&#x2714;</span>");
+				}
+			}
+
+			function checkLastName(name){
+				if(name.value == ''){
+					$('#info_lastName').html("");
+				}else{
+					$('#info_lastName').html("<span class='available'>&nbsp;&#x2714;</span>");
+					name.setCustomValidity("");
+				}
+			}
+
+			function checkEmail(email){
+
+				if(email.value == ''){
+					$('#info_email').html('');
+					return;
+				}
+
+				var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+				if(re.test(email.value)){
+					datas = "&email="+email.value;
+					$.ajax({
+						type: "POST",
+						url: "signup/checkuser.php",
+						data: datas
+					}).done(function(data){
+						$('#info_email').html(data);
+						$('#info_email2').html("");
+					});
+				}
+				else{
+					$('#info_email').html("<span class='taken'>&nbsp;&#x2718</span>");
+					$('#info_email2').html("Invalid Email Format");	
+				}
+			}
+
+			function checkPassword2(str){
+				if(str.value != ""){
+					$('#info_pass2').html("<span class='available'>&nbsp;&#x2714</span>");
+				}
+				else
+					$('#info_pass2').html("<span class='taken'>&nbsp;&#x2718</span>");
+
+			}
+
+			function checkPassword(old_pass, new_pass){
+
+				if(old_pass.value == new_pass.value && old_pass.value != "")
+					$('#info_pass').html("<span class='available'>&nbsp;&#x2714;</span>");
+				else
+					$('#info_pass').html("<span class='taken'>&nbsp;&#x2718</span>");
+			}
+
+			function checkZipCode(str){
+
+				var re = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+
+				if(re.test(str.value)){
+					$('#info_zipCode').html("<span class='available'>&nbsp;&#x2714;</span>");
+				}
+				else{
+					$('#info_zipCode').html("<span class='taken'>&nbsp;&#x2718</span>");
+				}
+			}
+
+			function checkPhoneNum(str){
+				 var re = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/; 
+
+				if(re.test(str.value)){
+					$('#info_phoneNum').html("<span class='available'>&nbsp;&#x2714;</span>");
+				}
+				else{
+					$('#info_phoneNum').html("<span class='taken'>&nbsp;&#x2718</span>");
+				}
+			}
+
+			function checkHearAbout(str){
+				if(str.value != ""){
+					$('#info_hearAbout').html("<span class='available'>&nbsp;&#x2714</span>");
+				}
+				else
+					$('#info_hearAbout').html("<span class='taken'>&nbsp;&#x2718</span>");
+			}
+
+		</script>		
+	</body>
+</html>

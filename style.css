@@ -1,0 +1,51 @@
+/*CSS File For Sign-In webpage*/
+#body-color{
+	background-color:#FFFFFF;
+}
+#Sign-In{
+	margin-top:30px;
+	margin-left: auto;
+    margin-right: auto;
+	padding:9px 35px;
+	background:#FFFFFF;
+	width:50%;
+}
+.login{
+	margin-left: 35%;
+	margin-top: 20px;
+}
+#user_input{
+	text-align: center;
+	margin-left: 80px;
+	width: 75%;
+	height:50px;
+	font-size:25px; 
+    border: 2px solid black; 
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#signUpForm .form-control{
+	width:80%;
+	text-align:center;
+	float:left;
+}
+
+.signup .modal-body{
+	margin-left:50px;
+}
+
+.signup .modal-footer{
+}
+
+#signUpForm .form-group{
+	height:43px;
+	width: 600px;
+}
+.taken{
+	color:red;
+}
+.available{
+	color:lime;
+}

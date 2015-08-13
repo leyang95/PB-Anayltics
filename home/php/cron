@@ -1,0 +1,32 @@
+BEGIN
+
+
+IF (NEW.ration_selected != -1) THEN
+
+IF (EXISTS(SELECT * FROM table_feedstuffs WHERE date = CURRENT_DATE)) THEN
+   DELETE from table_feedstuffs WHERE date = CURRENT_DATE;
+END IF;
+
+IF (EXISTS(SELECT * FROM test_ration WHERE date_type = CURRENT_DATE)) THEN
+   DELETE from test_ration WHERE date_type = CURRENT_DATE;
+END IF;
+
+IF (EXISTS(SELECT * FROM table_drymatter WHERE date_type = CURRENT_DATE)) THEN
+   DELETE from table_drymatter WHERE date_type = CURRENT_DATE;
+END IF;
+
+
+INSERT INTO test_ration (lot_id, user_id, date_type, type, 	 percent_weight, percent_dry, ration_id, weight)
+SELECT test.id, test.user_id, CURRENT_DATE, feed_type.type, feed_type.percent_weight*test.weight/100, feed_type.percent_dry*(feed_type.percent_weight*test.weight/100)/100, test.ration_selected, test.weight FROM test, feed_type where test.ration_selected = feed_type.ration_id;
+
+
+INSERT INTO table_drymatter (lot_id, date_type, type, dry_matter, total_dry, dmi)
+SELECT test.id, CURRENT_DATE, test_ration.type, test_ration.percent_dry, 0,0 FROM test, test_ration where test.id = test_ration.lot_id;
+END IF;
+
+INSERT INTO table_feedstuffs (lot_id, user_id, date, type, price, dm, unit)
+SELECT test.id, test.user_id, CURRENT_DATE, feedtype.type_name, feedtype.cost_per_ton, feed_type.percent_dry, 'per ton' FROM test, feedtype, feed_type where feedtype.user_id = feed_type.user_id and test.ration_selected = feed_type.ration_id and feedtype.type_name = feed_type.type;
+
+END IF;
+END
+
